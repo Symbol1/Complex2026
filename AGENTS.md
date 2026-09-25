@@ -3,8 +3,10 @@
 - 講義直接呈現整理後的知識，而不需要糾正 prompt 因為 prompt 寫太快本來就很容易錯。任何需要釐清 prompter 的用詞或觀念時，在 chat 中說明，不寫進講義。例如直接介紹螢光讀取，不加上「不宜直接稱為『化學放光』」之類的話。
 - 中文排版請依照 [中文文案排版指北（GitHub README）](https://github.com/sparanoid/chinese-copywriting-guidelines/blob/master/README.md)。
 - 數學符號與公式在中英文混排時也視為英文，適用相同的空格與標點規則：與中文字之間加空格，與全形標點之間不加空格。例如 `當 $p$ 很小時`、`若 $d = 4$，則能更正 1 個錯誤`、`距離（$d$）`。
+- 講義中的英文散文請依照 AMS Style Guide（AMSSG）的規範書寫，不只限於引號規則。例如採用邏輯引號（logical quotation）：句尾標點（句號、逗號等）若不屬於被引用的文字本身，應放在右引號之外，如 `the term "bounded"` 而非 `"bounded."`；只有標點本身就是引文的一部分時才放在引號內。
 - 建立或修改 `.ipynb` 講義時，每個 section title（包含各級 Markdown 標題 `#` 至 `######`）必須獨立放在一個 Markdown cell；內文、公式、表格、圖片與其他標題應放在其他 cells。
 - cell 大概十行，這是為了 jk 翻 cell 的時候不要一次捲動太多
+- Sage 程式碼的 cell 語言標記使用 `python`，以顯示語法配色；每個 code cell 的 `metadata.vscode.languageId` 與 notebook 的 `metadata.language_info.name` 都設為 `python`，不可設為 `sage`。執行核心仍使用 SageMath，保留 `metadata.kernelspec` 的 SageMath 設定。儲存後檢查所有 code cells，避免編輯器留下 `languageId: sage`。
 - LaTeX 原始碼要加上適當空格，讓公式容易閱讀：二元運算子與關係符號（如 `+`、`-`、`=`、`\in`、`\le`）兩側留空格，逗號後留空格。例如 `s_b(t) = A\cos(2\pi f_ct + \pi b),\qquad b \in \{0, 1\}`。
 - 行內公式與前後文字的間距依上述混排規則處理；`$` 與公式內容之間不加空格。
 - 展示公式 `$$ ... $$` 前後的空行依 TeX 的段落語意處理：空行代表換段，不是單純增加視覺留白。公式延續前文時，前文與公式之間不加空行；後文延續同一段時，公式與後文之間也不加空行。上下都有空行會讓公式獨立成段，通常不合講述脈絡，因此不要慣例性地在兩側都加空行；只在語意確實換段時留空行。
