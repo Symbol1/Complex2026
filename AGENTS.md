@@ -3,6 +3,10 @@
 - 使用者同時使用 ChatGPT 與 Claude，兩者都必須讀這份 `AGENTS.md`；不要建立或改用 `CLAUDE.md`。
 - 想保存記憶（使用者的偏好、糾正，以及之後都要遵守的規則）時，直接寫進這份 `AGENTS.md` 的對應段落，不要只存在單一工具自己的記憶或 `CLAUDE.md` 裡，這樣 ChatGPT 與 Claude 都讀得到。
 
+# 環境
+
+- SageMath 裝在 `~/miniforge3/envs/sage`，不在 `PATH` 上：執行 Sage 用 `~/miniforge3/envs/sage/bin/sage`，執行講義用同一個環境的 `jupyter`（`sagemath` kernel 也在這裡）。驗證 Sage 程式碼時直接用它跑，不要因為 `which sage` 找不到就略過。
+
 # Notebook 格式
 
 - 講義直接呈現整理後的知識，而不需要糾正 prompt 因為 prompt 寫太快本來就很容易錯。任何需要釐清 prompter 的用詞或觀念時，在 chat 中說明，不寫進講義。例如直接介紹螢光讀取，不加上「不宜直接稱為『化學放光』」之類的話。
