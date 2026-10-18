@@ -1,1 +1,22 @@
 ignore/
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.xdv
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+
+# 考卷原始檔不進 git
+*.tex

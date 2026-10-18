@@ -14,11 +14,23 @@
 - 依照上述截止點，目前確認待補的主題為：
   - 一般複數 $n$ 次方根、root mappings 與 branch 的選擇。
   - 系統性討論區域在 $z^n$、$z^{1/n}$ 與 $1/z$ 之下的 images 與 preimages。
-  - 複變函數極限、極限運算律與用不同路徑判定極限不存在。
+  - 複變函數極限、極限ㄍ運算律與用不同路徑判定極限不存在。
   - 一般複數冪 $z^\alpha$、$z^w$ 及其 branches。
   - inverse trigonometric functions 與 inverse hyperbolic functions。
   - Morera's theorem。
   - 不額外假設 $f'$ 連續的 Cauchy–Goursat theorem 證明；現有講義只給了依賴 Green's theorem 的版本。
+
+# 考卷
+
+- 考卷用 LaTeX（xelatex）出，格式沿用 `~/Correct2026/1013/1013midmock.tex`：題目卷加答案卷，`\end{document}` 之後放依講義日期分類的題庫。檔案放在以日期命名的資料夾（例如 `1018/1018midmock.tex`）；`.tex` 含答案註解，已在 `.gitignore` 排除，只有 PDF 進 git。
+- 本班考試不開放使用計算機（包括 991），題目要能徒手算出精確答案，不出需要容許誤差或科學記號的數值題。
+- 數字不要直接取自講義的例題或作業；同一個概念要換成新的函數或數值。
+- 多出依學號變化的題目。用學號最後兩碼：$p$ 是倒數第二碼、$q$ 是最後一碼、$N = 10p + q$，在題目卷開頭定義一次（研究生學號倒數第三碼可能是字母，所以不用末三碼）。$p, q$ 從 0 到 9 都要能做、答案要能用公式寫在註解裡讓助教對照。每個 bomb（是非題、計算、圍道積分等連續小題組）至少要有一題依學號變化。盡量用 $p + q$、$p - q$ 混合兩碼，避免難度只跟單一碼有關；需要避開零或邊界時可加小位移，例如 $p - q - \frac13$。正式考試中需要 0–9 單一數字的題目（例如圖上的標號）改用 $(p + q) \bmod 10$，因為 $|p - q|$ 分布不均（0 有 10 組、9 只有 2 組）。
+- 考卷的 LaTeX 不用 `\left` / `\right`，改用固定大小的 `\Bigl` / `\Bigr`（或 `\bigl` / `\bigr`）。
+- 每題只問一個答案；需要兩個量時（例如圓的圓心與半徑）拆成兩題，各一分。
+- 題目中的人名用台灣各大學正式英文校名裡的羅馬拼音（不用漢語拼音），格式比照 HsinPo：每個音節首字母大寫、直接連寫，不加空格或連字號。例如 TsingHua（清華）、ChiaoTung（交通）、ChengKung（成功）、ChengChi（政治）、ChungHsing（中興）、ChungCheng（中正）、YangMing（陽明）、ChangGung（長庚）、ChungYuan（中原）、SooChow（東吳）、FuJen（輔仁）、TamKang（淡江）、FengChia（逢甲）、YuanZe（元智）、TungHai（東海）、DongHwa（東華）、ChiNan（暨南）、MingChuan（銘傳）、ShihHsin（世新）。正式英文名不是羅馬拼音的學校（例如中央 Central、師大 Normal）或會變成真人名字的（中山 Sun Yat-sen）不用；題目要像 Correct2026 那樣讓人名參與情境（某人宣稱、計算、展開），不要只是掛名。bomb（連續小題組）的說明不需要人名。（Correct2026 的人名是晶片製造商，這門課沒有晶片。）
+- 用到 $\operatorname{Log}$、$\operatorname{Arg}$ 時，考卷要明確寫出主值與 branch cut：$\operatorname{Arg}z \in (-\pi, \pi]$，branch cut 在負實軸。寫在用到的大題說明裡，不寫在考卷開頭；同理，圍道方向（counterclockwise）也寫在大題說明或題目本身，不寫在開頭。
+- 期中考範圍以講義中的 `midterm cutting line` 為界；residue 本身在截止線之後，但用 residue 想法（Cauchy integral formula、Laurent 係數 $a_{-1}$）算的圍道積分可以出，題目中不出現 residue 一詞。
 
 # Notebook 格式
 
