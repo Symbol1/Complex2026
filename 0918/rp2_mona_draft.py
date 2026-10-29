@@ -3,9 +3,9 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 
-SOURCE_GIF = Path("0918/rp2_mona.gif")
+SOURCE_GIF = Path("0918/projective-plane-mona-horizontal-motion.gif")
 MONA_PATH = Path("0918/mona.jpg")
-OUT_PATH = Path("0918/rp2_mona_draft.gif")
+OUT_PATH = Path("0918/projective-plane-mona-horizontal-seam-motion.gif")
 
 S = 400
 HALF_SIDE = S / 2
