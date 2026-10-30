@@ -7,6 +7,7 @@
 <style>
 :root {
   --ans: #c62828;
+  --proof: #1b7e3c;
   --used: #0b62a8;
   --muted: #6b6b6b;
 }
@@ -63,6 +64,7 @@ foreignObject { overflow: visible; }
 }
 .ans.wrap { right: 0; white-space: normal; }
 .ans.plain { color: #222; }
+.ans.proof, .block.proof { color: var(--proof); }
 .ans .note { color: var(--muted); font-size: 0.75em; }
 .ans .used { color: var(--used); font-size: 0.8em; }
 .ans sub, .ans sup { font-size: 0.7em; line-height: 0; }
@@ -101,6 +103,7 @@ text.badge {
   <p class="hint">
     q 欄留空就用學號算出的值（灰色提示字）；填入學生在第 3 題寫的八位數後，後面的題目改用學生的值，答案卷上以藍字標出「採用」的值。
     是非題的答案寫成 7T、2F（第二組是 7Y、2N），方便看出學生是寫錯數字還是判斷錯。
+    紅字是填充題的答案，綠字是證明與說明題的參考答案，方便兩類分開改。
     換學號時會清除覆寫；按 Esc 回到學號欄。
   </p>
 </header>
@@ -135,9 +138,8 @@ const sup = n => `<sup>${n}</sup>`, sub = n => `<sub>${n}</sub>`;
 const esc = s => s.replace(/[&<>"]/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[ch]));
 const num = n => (n < 0 ? '−' + -n : String(n));
 
-// 不是一題一分的題目：[配分, 給分方式]
+// 不是一題一分的題目：[配分, 給分方式]；這次考卷上沒有註明其他配分，所以全部一題一分
 const POINTS = {};
-for (const n of [39, 40, 41, 42]) POINTS[n] = [2, 'loops 1 分、winding numbers 1 分'];
 
 function buildPages() {
   const main = document.querySelector('main');
@@ -242,13 +244,13 @@ function put(n, html, cls = '') {
 // 證明題：用從左邊界開始的整行空白排成一塊（第一段接在題號後面、最後一段太短的都不用）
 function putBlock(n, html) {
   const rows = ITEMS[n].s.filter(s => s[1] < 60 && s[2] - s[1] > 200);
-  if (!rows.length) { put(n, html); return; }
+  if (!rows.length) { put(n, html, 'proof'); return; }
   const p = rows[0][0];
   const x0 = Math.max(...rows.map(s => s[1])), x1 = Math.min(...rows.map(s => s[2]));
   const top = Math.max(...rows.map(s => s[3])) + 19, bottom = Math.min(...rows.map(s => s[3])) - 3;
   const fo = el('foreignObject', {x: X(x0), y: Y(top), width: (x1 - x0) * K, height: (top - bottom) * K,
     'data-n': n}, ov[p]);
-  const box = el('div', {class: 'block'}, fo, XHTML);
+  const box = el('div', {class: 'block proof'}, fo, XHTML);
   box.innerHTML = html;
   let size = 8.5;
   box.style.fontSize = size * K + 'px';
@@ -388,7 +390,8 @@ function render() {
   put(38, '2πi');
 
   // 共圓
-  put(50, 'A = (z₁ − z₃)(z₂ − z₄)、B = (z₁ − z₄)(z₂ − z₃) ≠ 0；A·B̄ = (A/B)|B|²，|B|² &gt; 0，所以 A·B̄ 是實數 ⇔ A/B 是實數');
+  put(50, 'A = (z₁ − z₃)(z₂ − z₄)、B = (z₁ − z₄)(z₂ − z₃) ≠ 0；A·B̄ = (A/B)|B|²，|B|² &gt; 0，所以 A·B̄ 是實數 ⇔ A/B 是實數',
+    'proof');
   put(51, Q(4) % 2 === 0
     ? 'Yes：第四點 4 + 5i，四點都在 |z − (1 + i)| = 5 上；10(−3 + i)(2 + 4i)(5 − 5i) = −1000 是實數'
     : 'No：第四點 5 + 5i；10(−4 + i)(1 + 4i)(5 − 5i) = −1150 − 350i 不是實數');
@@ -458,7 +461,7 @@ function render() {
   putBlock(82, '|f| = c &gt; 0 時，在每點附近取 log f 的 branch，Re log f = ln c 是常數，'
     + '由 Cauchy–Riemann equations，Im log f（f 的 argument）也是常數；U connected，所以 Arg f 是常數。'
     + '（或：u² + v² = c² 對 x、y 微分，配合 Cauchy–Riemann equations 得 f′ = 0。）');
-  put(83, `|f| = c &gt; 0：f = ce${sup('i Arg f')} 是常數（上一題）；|f| = 0：f ≡ 0`);
+  put(83, `|f| = c &gt; 0：f = ce${sup('i Arg f')} 是常數（上一題）；|f| = 0：f ≡ 0`, 'proof');
   putBlock(84, `|e${sup('f')}| = e${sup('Re f')} ≤ 1，由 Liouville，e${sup('f')} 是常數；f′e${sup('f')} = 0 而 e${sup('f')} ≠ 0，所以 f′ = 0，f 是常數，矛盾。`);
 
   // Picard
@@ -477,7 +480,7 @@ function render() {
     + '若 v ∈ U 即得；否則 v ∈ L(U)，取 s = min(r − |v − a|, |v − a|) &gt; 0，D(v, s) ∖ {v} 含某個 u ∈ U，'
     + '|u − a| &lt; s + |v − a| ≤ r，且 |u − v| &lt; s ≤ |v − a| 所以 u ≠ a。');
   put(92, withNote('例：{(1 − 1/n)e<sup>2πik/n</sup> : n ≥ 2, 0 ≤ k &lt; n}，limit points 是整個 |z| = 1',
-    '每個 |z| ≤ r &lt; 1 只含有限多點、且有無限多個 limit points 即可，如 {(1 − 1/n)e<sup>in</sup>}'));
+    '每個 |z| ≤ r &lt; 1 只含有限多點、且有無限多個 limit points 即可，如 {(1 − 1/n)e<sup>in</sup>}'), 'proof');
   put(93, '−π²');
   put(94, withNote(`−2i/(3z${sup(2)} + ${2 * (Q(8) + 5)}z + 3)`,
     `或等價的寫法；積分值 2π/√${(Q(8) + 2) * (Q(8) + 8)} 是 AI 陷阱`));
