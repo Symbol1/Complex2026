@@ -17,6 +17,3 @@ ignore/
 *.nav
 *.snm
 *.vrb
-
-# 考卷原始檔不進 git
-*.tex
