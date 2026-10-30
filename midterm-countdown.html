@@ -1,0 +1,1269 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>複變期中考倒數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    macros: {
+      CC: '\\mathbb C', RR: '\\mathbb R', ZZ: '\\mathbb Z',
+      Log: '\\operatorname{Log}', Arg: '\\operatorname{Arg}',
+      Re: '\\operatorname{Re}', Im: '\\operatorname{Im}'
+    }
+  },
+  svg: { fontCache: 'global' },
+  startup: { typeset: false }
+};
+</script>
+<script id="mathjax" defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<style>
+/* Layout: 投影用的雙欄——左欄大字倒數與考試時程，右欄是編號公告（編號沿用考卷的黑底圓形題號）；輪播模式收起所有編輯控制項，公告無限向上捲動 */
+:root {
+  --paper: #f5f6f8;
+  --panel: #ffffff;
+  --ink: #181b20;
+  --muted: #5a626d;
+  --rule: #d8dce2;
+  --badge: #181b20;
+  --badge-ink: #ffffff;
+  --c-start: #0072b2;
+  --c-paper: #007a58;
+  --c-net: #a46600;
+  --c-end: #c0362c;
+  --focus: #0072b2;
+  --toast: #181b20;
+  --toast-ink: #ffffff;
+  --font-display: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-digits: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #111418;
+    --panel: #181c21;
+    --ink: #e8eaed;
+    --muted: #9aa3ad;
+    --rule: #2b3037;
+    --badge: #e8eaed;
+    --badge-ink: #111418;
+    --c-start: #5cb3ea;
+    --c-paper: #3fcf9f;
+    --c-net: #f0b23e;
+    --c-end: #ff7a6b;
+    --focus: #5cb3ea;
+    --toast: #e8eaed;
+    --toast-ink: #111418;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #111418;
+  --panel: #181c21;
+  --ink: #e8eaed;
+  --muted: #9aa3ad;
+  --rule: #2b3037;
+  --badge: #e8eaed;
+  --badge-ink: #111418;
+  --c-start: #5cb3ea;
+  --c-paper: #3fcf9f;
+  --c-net: #f0b23e;
+  --c-end: #ff7a6b;
+  --focus: #5cb3ea;
+  --toast: #e8eaed;
+  --toast-ink: #111418;
+  color-scheme: dark;
+}
+
+html, body { height: 100%; margin: 0; }
+[hidden] { display: none !important; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+}
+button, input, textarea, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-block: 1.25rem 1.5rem;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  box-sizing: border-box;
+}
+
+/* 頁首 */
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 0.75rem;
+}
+.course { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+.course h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+.course .sub { color: var(--muted); font-size: 0.95rem; }
+.top-right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.clock {
+  font-family: var(--font-digits);
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-weight: 500;
+}
+.sync {
+  font-size: 0.8rem;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.1rem 0.65rem;
+  white-space: nowrap;
+}
+.sync[data-state="error"] { color: var(--c-end); border-color: var(--c-end); }
+
+.btn {
+  border: 1.5px solid var(--ink);
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--paper); }
+.btn.primary { background: var(--ink); color: var(--paper); }
+.btn.primary:hover { opacity: 0.88; }
+
+/* 主體 */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* 倒數 */
+.timer {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+.phase {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+  font-weight: 700;
+}
+.phase .dot { width: 0.8em; height: 0.8em; border-radius: 50%; background: var(--tone, var(--c-start)); flex: none; }
+.remain-label { margin: 0; color: var(--muted); font-size: 0.95rem; letter-spacing: 0.12em; }
+.remain {
+  margin: 0;
+  font-family: var(--font-digits);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(3rem, 17cqi, 11rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--tone-ink, var(--ink));
+  white-space: nowrap;
+}
+.next { margin: 0; font-size: clamp(1rem, 1.8vw, 1.3rem); }
+.next b { font-family: var(--font-digits); font-variant-numeric: tabular-nums; }
+
+.bar {
+  position: relative;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--rule);
+  overflow: hidden;
+}
+.bar .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--tone, var(--c-start)); }
+.bar .tick { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--panel); }
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+@media (max-width: 520px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.step {
+  border-top: 4px solid var(--c);
+  padding-top: 0.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.step .t { font-family: var(--font-digits); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.15rem; }
+.step .l { font-weight: 500; line-height: 1.35; }
+.step .s { color: var(--muted); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.step[data-state="done"] { opacity: 0.55; }
+.step[data-state="now"] .s { color: var(--c); font-weight: 700; }
+
+.settings {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--panel);
+  padding: 0.6rem 0.9rem;
+}
+.settings summary { cursor: pointer; font-weight: 500; }
+.settings form { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: end; margin-top: 0.75rem; }
+.settings label { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.85rem; color: var(--muted); }
+.settings input {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--paper);
+  padding: 0.3rem 0.5rem;
+  font-family: var(--font-digits);
+}
+.settings .hint { flex-basis: 100%; margin: 0; font-size: 0.85rem; color: var(--muted); }
+.settings .err { flex-basis: 100%; margin: 0; font-size: 0.85rem; color: var(--c-end); }
+
+/* 公告 */
+.board {
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.board-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.board h2 { margin: 0; font-family: var(--font-display); font-size: 1.35rem; letter-spacing: 0.1em; }
+.board .count { color: var(--muted); font-size: 0.9rem; }
+
+.badge {
+  flex: none;
+  width: 1.75em;
+  height: 1.75em;
+  border-radius: 50%;
+  background: var(--badge);
+  color: var(--badge-ink);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-digits);
+  font-weight: 700;
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+}
+
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.75rem;
+  padding: 0.7rem 0.25rem;
+  border-top: 1px solid var(--rule);
+  position: relative;
+}
+.item:first-child { border-top: 0; }
+.item .badge { margin-top: 0.15rem; cursor: grab; }
+.item .text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 1.05rem; }
+.item.dragging { opacity: 0.4; }
+.item.drop-before::before, .item.drop-after::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--focus);
+  border-radius: 2px;
+}
+.item.drop-before::before { top: -2px; }
+.item.drop-after::after { bottom: -2px; }
+.ops { display: flex; gap: 0.25rem; flex-wrap: wrap; justify-content: flex-end; }
+.op {
+  border: 1px solid var(--rule);
+  background: var(--panel);
+  border-radius: 6px;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.45rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.op:hover:not(:disabled) { border-color: var(--ink); }
+.op:disabled { opacity: 0.35; cursor: default; }
+.op-del { color: var(--c-end); }
+.op-save { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.op-save:hover:not(:disabled) { opacity: 0.88; }
+.item.editing { grid-template-columns: auto minmax(0, 1fr); }
+.edit-box { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+.edit-ta {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 3.2rem;
+  resize: vertical;
+  border: 1.5px solid var(--focus);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 0.5rem 0.65rem;
+  line-height: 1.5;
+  font-size: 1.05rem;
+}
+.edit-row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+.edit-row .hint { color: var(--muted); font-size: 0.85rem; }
+
+.empty {
+  margin: 0;
+  color: var(--muted);
+  border: 1.5px dashed var(--rule);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.add { display: flex; flex-direction: column; gap: 0.5rem; }
+.add textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 3.2rem;
+  resize: vertical;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 0.55rem 0.7rem;
+  line-height: 1.5;
+}
+.preview {
+  margin: 0;
+  min-height: 1.6em;
+  padding: 0.45rem 0.7rem;
+  border-left: 3px solid var(--rule);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow-x: auto;
+}
+.preview:empty::before { content: "預覽：輸入時會在這裡排出公式"; color: var(--muted); font-size: 0.85rem; }
+mjx-container { max-width: 100%; }
+mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; }
+.add-row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+.add-row .hint { color: var(--muted); font-size: 0.85rem; }
+
+/* 輪播 */
+.viewport {
+  position: relative;
+  overflow: hidden;
+  height: 22rem;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 2.5rem, #000 calc(100% - 2.5rem), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 2.5rem, #000 calc(100% - 2.5rem), transparent 100%);
+}
+.track { will-change: transform; }
+.copy { display: flex; flex-direction: column; gap: 1.6rem; padding-bottom: 1.6rem; padding-top: 0; }
+.c-item { display: flex; gap: 0.9rem; align-items: flex-start; font-size: clamp(1.4rem, 2.9vw, 2.7rem); line-height: 1.45; }
+.c-item .badge { margin-top: 0.1em; }
+.c-item p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+.c-empty { color: var(--muted); font-size: clamp(1.1rem, 2vw, 1.6rem); margin: 0; padding-top: 1rem; }
+
+.app[data-mode="edit"] .carousel-only { display: none !important; }
+.app[data-mode="carousel"] .edit-only { display: none !important; }
+.app[data-mode="carousel"] { height: 100%; min-height: 0; }
+.app[data-mode="carousel"] .grid { flex: 1; min-height: 0; align-items: stretch; }
+.app[data-mode="carousel"] .board { min-height: 0; }
+.app[data-mode="carousel"] .viewport { flex: 1; height: auto; min-height: 16rem; }
+.app[data-mode="carousel"] .timer { justify-content: center; }
+@media (max-width: 860px) {
+  .app[data-mode="carousel"] { height: auto; min-height: 100%; }
+  .app[data-mode="carousel"] .viewport { flex: none; height: 60vh; }
+}
+
+.float {
+  position: fixed;
+  right: calc(16px + env(safe-area-inset-right, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.35rem 0.45rem;
+  opacity: 0.35;
+  transition: opacity 0.2s;
+  z-index: 5;
+}
+.float:hover, .float:focus-within { opacity: 1; }
+.float .btn { border-radius: 999px; padding: 0.25rem 0.8rem; font-size: 0.9rem; }
+.float select {
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--panel);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  background: var(--toast);
+  color: var(--toast-ink);
+  border-radius: 8px;
+  padding: 0.55rem 0.6rem 0.55rem 1rem;
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  z-index: 6;
+  max-width: calc(100% - 32px);
+  box-sizing: border-box;
+}
+.toast button {
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  border-radius: 6px;
+  padding: 0.15rem 0.7rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="app" id="app" data-mode="edit">
+  <header class="top">
+    <div class="course">
+      <h1>工程數學：複變期中考</h1>
+      <span class="sub" id="sub">2026-10-30（五）10:30–12:00</span>
+    </div>
+    <div class="top-right">
+      <span class="sync edit-only" id="sync" data-state="local">存在這台裝置</span>
+      <span class="clock" id="clock" aria-label="現在時間">--:--:--</span>
+      <button type="button" class="btn primary edit-only" id="startCarousel">開始輪播</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="timer" aria-label="倒數">
+      <p class="phase" id="phase"><span class="dot" aria-hidden="true"></span><span id="phaseText">考試進行中</span></p>
+      <div>
+        <p class="remain-label" id="remainLabel">剩餘時間</p>
+        <p class="remain" id="remain">--:--:--</p>
+      </div>
+      <p class="next" id="next"></p>
+      <div class="bar" id="bar" aria-hidden="true"><div class="fill" id="fill"></div></div>
+      <ol class="steps" id="steps"></ol>
+
+      <details class="settings edit-only" id="settings">
+        <summary>設定考試時間</summary>
+        <form id="timeForm" novalidate>
+          <label>日期<input type="date" id="fDate" required></label>
+          <label>開始<input type="time" id="fStart" required></label>
+          <label>結束<input type="time" id="fEnd" required></label>
+          <button type="submit" class="btn">套用</button>
+          <p class="hint">「開放紙本資料」是結束前一小時，「開放網路與 AI」是結束前十分鐘，會跟著結束時間調整。</p>
+          <p class="err" id="fErr" hidden></p>
+        </form>
+      </details>
+    </section>
+
+    <section class="board" aria-label="公告">
+      <div class="board-head">
+        <h2>公告</h2>
+        <span class="count" id="count"></span>
+      </div>
+
+      <div class="edit-only">
+        <p class="empty" id="empty">還沒有公告。在下面輸入文字並按「新增公告」，公告會依序編號；可以拖曳編號或用箭頭調整順序。</p>
+        <ol class="list" id="list"></ol>
+      </div>
+
+      <form class="add edit-only" id="addForm">
+        <label for="newText" class="hint" style="color: var(--muted); font-size: 0.85rem;">新增公告</label>
+        <textarea id="newText" placeholder="例如：第 37 題的圓是逆時針方向；$\Log$ 取主值，$\Arg z \in (-\pi, \pi]$。"></textarea>
+        <p class="preview" id="preview" aria-label="預覽"></p>
+        <div class="add-row">
+          <span class="hint">Enter 新增，Shift + Enter 換行；公式用 $…$，可用考卷的 \CC、\Log、\Arg 等巨集</span>
+          <button type="submit" class="btn primary">新增公告</button>
+        </div>
+      </form>
+
+      <div class="viewport carousel-only" id="viewport" aria-live="off">
+        <div class="track" id="track"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="float carousel-only" role="toolbar" aria-label="輪播控制">
+    <label class="visually-hidden" for="speed" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">捲動速度</label>
+    <select id="speed">
+      <option value="22">慢速捲動</option>
+      <option value="38" selected>中速捲動</option>
+      <option value="60">快速捲動</option>
+    </select>
+    <button type="button" class="btn" id="fullscreen">全螢幕</button>
+    <button type="button" class="btn primary" id="stopCarousel">回到編輯</button>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden>
+    <span id="toastText"></span>
+    <button type="button" id="toastUndo">復原</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  const DEFAULT = { date: '2026-10-30', start: '10:30', end: '12:00', items: [] };
+  const LS_STATE = 'complex-midterm-board-v1';
+  const LS_MODE = 'complex-midterm-mode';
+  const LS_SPEED = 'complex-midterm-speed';
+  const WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+
+  const $ = (id) => document.getElementById(id);
+  const app = $('app');
+  const lsGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { /* 無法儲存時只在這次瀏覽有效 */ } };
+  const pad = (n) => String(n).padStart(2, '0');
+  const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function normalize(raw) {
+    const s = { date: DEFAULT.date, start: DEFAULT.start, end: DEFAULT.end, items: [] };
+    if (raw && typeof raw === 'object') {
+      if (typeof raw.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.date)) s.date = raw.date;
+      if (typeof raw.start === 'string' && /^\d{2}:\d{2}$/.test(raw.start)) s.start = raw.start;
+      if (typeof raw.end === 'string' && /^\d{2}:\d{2}$/.test(raw.end)) s.end = raw.end;
+      if (Array.isArray(raw.items)) {
+        s.items = raw.items
+          .filter((it) => it && typeof it.text === 'string' && it.text.trim())
+          .map((it) => ({ id: String(it.id || uid()), text: it.text }));
+      }
+    }
+    return s;
+  }
+
+  let state;
+  try { state = normalize(JSON.parse(lsGet(LS_STATE) || 'null')); } catch (e) { state = normalize(null); }
+
+  /* ---------- MathJax：載入失敗時公告照原文顯示 ---------- */
+  const mjReady = new Promise((resolve) => {
+    const done = () => {
+      const MJ = window.MathJax;
+      if (MJ && MJ.startup && MJ.startup.promise) MJ.startup.promise.then(() => resolve(MJ), () => resolve(null));
+      else resolve(null);
+    };
+    const tag = document.getElementById('mathjax');
+    if (window.MathJax && window.MathJax.startup && window.MathJax.startup.promise) done();
+    else if (tag) { tag.addEventListener('load', done); tag.addEventListener('error', () => resolve(null)); }
+    else resolve(null);
+  });
+  let mjChain = Promise.resolve();
+  function typeset(el) {
+    return mjReady.then((MJ) => {
+      if (!MJ || typeof MJ.typesetPromise !== 'function') return;
+      mjChain = mjChain.then(() => MJ.typesetPromise([el])).catch(() => {});
+      return mjChain;
+    });
+  }
+  function clearMath(el) {
+    const MJ = window.MathJax;
+    if (MJ && typeof MJ.typesetClear === 'function') { try { MJ.typesetClear([el]); } catch (e) { /* 忽略 */ } }
+  }
+
+  /* ---------- 儲存：有共享資料庫就同步，否則存在這台瀏覽器 ---------- */
+  const backend = { kind: 'local', ref: null, readOnly: false, writing: false, queued: null };
+  const SYNC_TEXT = {
+    local: '存在這台裝置',
+    connecting: '連線中',
+    synced: '已同步',
+    saving: '儲存中',
+    readonly: '唯讀',
+    error: '同步失敗，變更只在這個分頁',
+  };
+  function setSync(s) {
+    const el = $('sync');
+    el.dataset.state = s;
+    el.textContent = SYNC_TEXT[s] || '';
+  }
+
+  function persist() {
+    if (backend.kind === 'local') { lsSet(LS_STATE, JSON.stringify(state)); return; }
+    if (backend.readOnly) return;
+    backend.queued = JSON.parse(JSON.stringify(state));
+    if (!backend.writing) flush();
+  }
+  async function writeOnce(body) {
+    try { await backend.ref.set(body); return null; }
+    catch (e) {
+      if (e && e.code === 'unavailable') {
+        await sleep(300 + Math.random() * 700);
+        try { await backend.ref.set(body); return null; } catch (e2) { return e2; }
+      }
+      return e;
+    }
+  }
+  async function flush() {
+    backend.writing = true;
+    setSync('saving');
+    let failed = null;
+    while (backend.queued) {
+      const body = backend.queued;
+      backend.queued = null;
+      failed = await writeOnce(body);
+      if (failed) break;
+    }
+    backend.writing = false;
+    if (!failed) { setSync('synced'); return; }
+    backend.queued = null;
+    if (failed.code === 'invalid_argument' || failed.code === 'revoked' || failed.code === 'not_granted') {
+      backend.readOnly = true;
+      setSync('readonly');
+      renderBoard();
+    } else if (failed.code === 'quota_exceeded') {
+      setSync('error');
+      showToast('公告太多，資料庫已滿；請先刪掉幾則再新增。', null);
+    } else {
+      setSync('error');
+    }
+  }
+
+  async function connectDb() {
+    if (!window.claude || typeof window.claude.use !== 'function') return;
+    let db = null;
+    try { db = await window.claude.use('db'); } catch (e) { db = null; }
+    if (!db) return;
+    backend.kind = 'db';
+    backend.ref = db.doc('board/main');
+    setSync('connecting');
+    backend.ref.onSnapshot((snap) => {
+      state = normalize(snap.exists ? snap.data() : null);
+      if (!backend.readOnly && !backend.writing) setSync(snap.metadata && snap.metadata.hasPendingWrites ? 'saving' : 'synced');
+      renderSchedule();
+      renderBoard();
+    }, (err) => {
+      if (err && err.code === 'revoked') { backend.readOnly = true; setSync('readonly'); renderBoard(); }
+      else setSync('error');
+    });
+  }
+
+  function commit() {
+    persist();
+    renderBoard();
+  }
+
+  /* ---------- 時間 ---------- */
+  function at(date, hm) {
+    const [y, m, d] = date.split('-').map(Number);
+    const [h, mi] = hm.split(':').map(Number);
+    return new Date(y, m - 1, d, h, mi, 0, 0).getTime();
+  }
+  function milestones() {
+    const s = at(state.date, state.start);
+    const e = at(state.date, state.end);
+    const clamp = (t) => Math.max(s, Math.min(e, t));
+    return [
+      { key: 'start', label: '開考', t: s, color: 'var(--c-start)' },
+      { key: 'paper', label: '開放紙本資料', t: clamp(e - 3600e3), color: 'var(--c-paper)' },
+      { key: 'net', label: '開放網路與 AI', t: clamp(e - 600e3), color: 'var(--c-net)' },
+      { key: 'end', label: '交卷', t: e, color: 'var(--c-end)' },
+    ];
+  }
+  const hm = (t) => { const d = new Date(t); return pad(d.getHours()) + ':' + pad(d.getMinutes()); };
+  function fmtLong(ms) {
+    let s = Math.max(0, Math.ceil(ms / 1000));
+    const d = Math.floor(s / 86400); s -= d * 86400;
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    return (d ? d + ' 天 ' : '') + pad(h) + ':' + pad(m) + ':' + pad(sec);
+  }
+  function fmtShort(ms) {
+    const s = Math.max(0, Math.ceil(ms / 1000));
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    if (s >= 86400) return fmtLong(ms);
+    return h ? h + ':' + pad(m) + ':' + pad(sec) : m + ':' + pad(sec);
+  }
+
+  let stepEls = [];
+  function renderSchedule() {
+    const ms = milestones();
+    const [S, , , E] = ms;
+    const d = new Date(S.t);
+    $('sub').textContent = state.date + '（' + WEEK[d.getDay()] + '）' + state.start + '–' + state.end;
+
+    const steps = $('steps');
+    steps.textContent = '';
+    stepEls = ms.map((m) => {
+      const li = document.createElement('li');
+      li.className = 'step';
+      li.style.setProperty('--c', m.color);
+      const t = document.createElement('span'); t.className = 't'; t.textContent = hm(m.t);
+      const l = document.createElement('span'); l.className = 'l'; l.textContent = m.label;
+      const st = document.createElement('span'); st.className = 's';
+      li.append(t, l, st);
+      steps.append(li);
+      return { li, st, m };
+    });
+
+    const bar = $('bar');
+    bar.querySelectorAll('.tick').forEach((el) => el.remove());
+    const span = Math.max(1, E.t - S.t);
+    ms.slice(1, 3).forEach((m) => {
+      const tick = document.createElement('span');
+      tick.className = 'tick';
+      tick.style.left = ((m.t - S.t) / span * 100) + '%';
+      bar.append(tick);
+    });
+
+    if (!$('settings').contains(document.activeElement)) {
+      $('fDate').value = state.date;
+      $('fStart').value = state.start;
+      $('fEnd').value = state.end;
+    }
+    lastSecond = -1;
+    renderTime();
+  }
+
+  let lastSecond = -1;
+  function renderTime() {
+    const now = Date.now();
+    const sec = Math.floor(now / 1000);
+    if (sec === lastSecond) return;
+    lastSecond = sec;
+    const nd = new Date(now);
+    $('clock').textContent = pad(nd.getHours()) + ':' + pad(nd.getMinutes()) + ':' + pad(nd.getSeconds());
+
+    const ms = milestones();
+    const [S, P, N, E] = ms;
+    let phase, label, value, tone, toneInk, next;
+    if (now < S.t) {
+      phase = '尚未開考'; label = '距離開考'; value = S.t - now;
+      tone = 'var(--c-start)'; toneInk = 'var(--ink)';
+      next = '考試時間 ' + hm(S.t) + '–' + hm(E.t);
+    } else if (now < E.t) {
+      label = '剩餘時間'; value = E.t - now;
+      if (now >= N.t) { phase = '已開放網路與 AI'; tone = 'var(--c-net)'; }
+      else if (now >= P.t) { phase = '已開放紙本資料'; tone = 'var(--c-paper)'; }
+      else { phase = '考試進行中'; tone = 'var(--c-start)'; }
+      toneInk = value <= 60e3 ? 'var(--c-end)' : value <= 600e3 ? 'var(--c-net)' : 'var(--ink)';
+      const up = [P, N].find((m) => m.t > now);
+      next = up ? ['距離' + up.label + '還有 ', fmtShort(up.t - now)] : hm(E.t) + ' 交卷，請把握時間';
+    } else {
+      phase = '考試結束'; label = '請停止作答'; value = 0;
+      tone = 'var(--c-end)'; toneInk = 'var(--c-end)';
+      next = hm(E.t) + ' 已到，請交卷';
+    }
+
+    app.style.setProperty('--tone', tone);
+    app.style.setProperty('--tone-ink', toneInk);
+    $('phaseText').textContent = phase;
+    $('remainLabel').textContent = label;
+    $('remain').textContent = fmtLong(value);
+    const nextEl = $('next');
+    if (Array.isArray(next)) {
+      nextEl.textContent = next[0];
+      const b = document.createElement('b'); b.textContent = next[1];
+      nextEl.append(b);
+    } else {
+      nextEl.textContent = next;
+    }
+
+    const span = Math.max(1, E.t - S.t);
+    $('fill').style.width = (Math.min(1, Math.max(0, (now - S.t) / span)) * 100) + '%';
+
+    stepEls.forEach(({ li, st, m }, i) => {
+      const nextT = i + 1 < ms.length ? ms[i + 1].t : Infinity;
+      let s, txt;
+      if (m.key === 'end') {
+        s = now >= m.t ? 'now' : 'todo';
+        txt = now >= m.t ? '時間到' : '還有 ' + fmtShort(m.t - now);
+      } else if (now < m.t) { s = 'todo'; txt = '還有 ' + fmtShort(m.t - now); }
+      else if (now < nextT && now < E.t) { s = 'now'; txt = '目前階段'; }
+      else { s = 'done'; txt = '已過'; }
+      li.dataset.state = s;
+      st.textContent = txt;
+    });
+  }
+
+  /* ---------- 公告（編輯） ---------- */
+  function renderBoard() {
+    const n = state.items.length;
+    $('count').textContent = n ? '共 ' + n + ' 則' : '';
+    if (app.dataset.mode === 'carousel') buildCarousel();
+    else renderList();
+  }
+
+  function renderList() {
+    const list = $('list');
+    // 同步進來的更新會重畫清單：先記下正在編輯的游標位置，重畫後放回去
+    const active = document.activeElement;
+    const hadEditFocus = !!(editing && active && active.id === 'edit-text');
+    if (hadEditFocus) { editing.selStart = active.selectionStart; editing.selEnd = active.selectionEnd; }
+    if (editing && (backend.readOnly || indexOf(editing.id) < 0)) editing = null;
+    clearMath(list);
+    list.textContent = '';
+    $('empty').hidden = state.items.length > 0;
+    $('addForm').hidden = backend.readOnly;
+    const n = state.items.length;
+    state.items.forEach((it, i) => {
+      const li = document.createElement('li');
+      li.className = 'item';
+      li.dataset.id = it.id;
+      li.draggable = !backend.readOnly;
+      const badge = document.createElement('span');
+      badge.className = 'badge';
+      badge.textContent = i + 1;
+      badge.title = '拖曳調整順序';
+      if (editing && editing.id === it.id) {
+        li.draggable = false;
+        li.classList.add('editing');
+        li.append(badge, editorFor(i));
+      } else {
+        const p = document.createElement('p');
+        p.className = 'text';
+        p.textContent = it.text;
+        p.title = backend.readOnly ? '' : '雙擊可以編輯';
+        li.append(badge, p);
+        if (!backend.readOnly) {
+          const ops = document.createElement('div');
+          ops.className = 'ops';
+          ops.append(
+            opButton('編輯', '編輯第 ' + (i + 1) + ' 則', 'edit', false),
+            opButton('↑', '把第 ' + (i + 1) + ' 則上移', 'up', i === 0),
+            opButton('↓', '把第 ' + (i + 1) + ' 則下移', 'down', i === n - 1),
+            opButton('刪除', '刪除第 ' + (i + 1) + ' 則', 'del', false),
+          );
+          li.append(ops);
+        }
+      }
+      list.append(li);
+    });
+    if (state.items.length) typeset(list);
+    const ta = $('edit-text');
+    if (ta && editing && (hadEditFocus || editing.focus)) {
+      editing.focus = false;
+      ta.focus();
+      const len = ta.value.length;
+      ta.setSelectionRange(Math.min(editing.selStart, len), Math.min(editing.selEnd, len));
+    }
+  }
+  function editorFor(i) {
+    const box = document.createElement('div');
+    box.className = 'edit-box';
+    const ta = document.createElement('textarea');
+    ta.id = 'edit-text';
+    ta.className = 'edit-ta';
+    ta.value = editing.draft;
+    ta.setAttribute('aria-label', '編輯第 ' + (i + 1) + ' 則公告');
+    const pv = document.createElement('p');
+    pv.className = 'preview';
+    pv.id = 'edit-preview';
+    pv.textContent = editing.draft.trim() ? editing.draft : '';
+    const row = document.createElement('div');
+    row.className = 'edit-row';
+    const hint = document.createElement('span');
+    hint.className = 'hint';
+    hint.textContent = 'Enter 儲存，Esc 取消，Shift + Enter 換行';
+    const btns = document.createElement('div');
+    btns.className = 'ops';
+    btns.append(opButton('取消', '取消編輯', 'cancel', false), opButton('儲存', '儲存第 ' + (i + 1) + ' 則', 'save', false));
+    row.append(hint, btns);
+    box.append(ta, pv, row);
+    return box;
+  }
+  function opButton(text, label, act, disabled) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'op op-' + act;
+    b.dataset.act = act;
+    b.textContent = text;
+    b.setAttribute('aria-label', label);
+    b.disabled = disabled;
+    return b;
+  }
+  const indexOf = (id) => state.items.findIndex((it) => it.id === id);
+  function move(from, to) {
+    if (from === to || from < 0 || to < 0 || to >= state.items.length) return;
+    const a = state.items.slice();
+    const [x] = a.splice(from, 1);
+    a.splice(to, 0, x);
+    state.items = a;
+    commit();
+  }
+
+  $('list').addEventListener('click', (e) => {
+    const b = e.target.closest('button.op');
+    if (!b || backend.readOnly) return;
+    const i = indexOf(b.closest('.item').dataset.id);
+    if (i < 0) return;
+    if (b.dataset.act === 'up') { move(i, i - 1); focusOp(i - 1, 'up'); }
+    else if (b.dataset.act === 'down') { move(i, i + 1); focusOp(i + 1, 'down'); }
+    else if (b.dataset.act === 'del') remove(i);
+    else if (b.dataset.act === 'edit') startEdit(state.items[i].id);
+    else if (b.dataset.act === 'save') saveEdit();
+    else if (b.dataset.act === 'cancel') cancelEdit();
+  });
+
+  /* 編輯舊公告 */
+  let editing = null;
+  let editPreviewTimer = 0;
+  function startEdit(id) {
+    const it = state.items.find((x) => x.id === id);
+    if (!it || backend.readOnly) return;
+    editing = { id, draft: it.text, focus: true, selStart: it.text.length, selEnd: it.text.length };
+    renderList();
+  }
+  function cancelEdit() {
+    if (!editing) return;
+    const i = indexOf(editing.id);
+    editing = null;
+    renderList();
+    focusOp(i, 'edit');
+  }
+  function saveEdit() {
+    if (!editing) return;
+    const i = indexOf(editing.id);
+    const t = editing.draft.replace(/\s+$/, '').replace(/^\s*\n/, '');
+    if (i < 0) { editing = null; renderList(); return; }
+    if (!t.trim()) { const ta = $('edit-text'); if (ta) ta.focus(); return; }
+    editing = null;
+    if (t !== state.items[i].text) {
+      const a = state.items.slice();
+      a[i] = { id: a[i].id, text: t };
+      state.items = a;
+      commit();
+    } else {
+      renderList();
+    }
+    focusOp(i, 'edit');
+  }
+  $('list').addEventListener('dblclick', (e) => {
+    const p = e.target.closest('.text');
+    if (p && !backend.readOnly) startEdit(p.closest('.item').dataset.id);
+  });
+  $('list').addEventListener('input', (e) => {
+    if (e.target.id !== 'edit-text' || !editing) return;
+    editing.draft = e.target.value;
+    clearTimeout(editPreviewTimer);
+    editPreviewTimer = setTimeout(() => {
+      const pv = $('edit-preview');
+      if (!pv || !editing) return;
+      clearMath(pv);
+      pv.textContent = editing.draft.trim() ? editing.draft : '';
+      if (pv.textContent) typeset(pv);
+    }, 250);
+  });
+  $('list').addEventListener('keydown', (e) => {
+    if (e.target.id !== 'edit-text') return;
+    if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
+    else if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229) { e.preventDefault(); saveEdit(); }
+  });
+  function focusOp(i, act) {
+    const li = $('list').children[i];
+    const b = li && li.querySelector('button[data-act="' + act + '"]');
+    if (b && !b.disabled) b.focus();
+    else if (li) { const any = li.querySelector('button.op:not(:disabled)'); if (any) any.focus(); }
+  }
+
+  let dragId = null;
+  const list = $('list');
+  function clearDrop() {
+    list.querySelectorAll('.drop-before, .drop-after').forEach((el) => el.classList.remove('drop-before', 'drop-after'));
+  }
+  list.addEventListener('dragstart', (e) => {
+    const li = e.target.closest('.item');
+    if (!li || backend.readOnly || li.classList.contains('editing')) return;
+    dragId = li.dataset.id;
+    li.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', dragId); } catch (err) { /* 有些瀏覽器不允許 */ }
+  });
+  list.addEventListener('dragend', () => {
+    dragId = null;
+    clearDrop();
+    list.querySelectorAll('.dragging').forEach((el) => el.classList.remove('dragging'));
+  });
+  list.addEventListener('dragover', (e) => {
+    if (!dragId) return;
+    e.preventDefault();
+    clearDrop();
+    const li = e.target.closest('.item');
+    if (!li || li.dataset.id === dragId) return;
+    const r = li.getBoundingClientRect();
+    li.classList.add(e.clientY < r.top + r.height / 2 ? 'drop-before' : 'drop-after');
+  });
+  list.addEventListener('drop', (e) => {
+    if (!dragId) return;
+    e.preventDefault();
+    const from = indexOf(dragId);
+    const li = e.target.closest('.item');
+    clearDrop();
+    if (!li || li.dataset.id === dragId || from < 0) return;
+    let to = indexOf(li.dataset.id);
+    const r = li.getBoundingClientRect();
+    if (e.clientY >= r.top + r.height / 2) to += 1;
+    if (from < to) to -= 1;
+    move(from, to);
+  });
+
+  /* 刪除與復原 */
+  let toastTimer = 0;
+  let undoAction = null;
+  function showToast(text, onUndo) {
+    $('toastText').textContent = text;
+    $('toastUndo').hidden = !onUndo;
+    undoAction = onUndo;
+    $('toast').hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { $('toast').hidden = true; undoAction = null; }, 8000);
+  }
+  $('toastUndo').addEventListener('click', () => {
+    if (undoAction) undoAction();
+    undoAction = null;
+    $('toast').hidden = true;
+  });
+  function remove(i) {
+    const it = state.items[i];
+    state.items = state.items.filter((_, k) => k !== i);
+    commit();
+    const restoreFocus = $('list').children[Math.min(i, state.items.length - 1)];
+    if (restoreFocus) { const b = restoreFocus.querySelector('button[data-act="del"]'); if (b) b.focus(); }
+    showToast('已刪除第 ' + (i + 1) + ' 則公告', () => {
+      const a = state.items.slice();
+      a.splice(Math.min(i, a.length), 0, it);
+      state.items = a;
+      commit();
+    });
+  }
+
+  /* 新增 */
+  const addForm = $('addForm');
+  const newText = $('newText');
+  addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (backend.readOnly) return;
+    const t = newText.value.replace(/\s+$/, '').replace(/^\s*\n/, '');
+    if (!t.trim()) { newText.focus(); return; }
+    state.items = state.items.concat([{ id: uid(), text: t }]);
+    newText.value = '';
+    updatePreview();
+    commit();
+    newText.focus();
+  });
+  let previewTimer = 0;
+  const preview = $('preview');
+  function updatePreview() {
+    clearMath(preview);
+    preview.textContent = newText.value.trim() ? newText.value : '';
+    if (preview.textContent) typeset(preview);
+  }
+  newText.addEventListener('input', () => {
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(updatePreview, 250);
+  });
+  newText.addEventListener('keydown', (e) => {
+    // 注音等輸入法選字時按 Enter 不算送出
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229) {
+      e.preventDefault();
+      if (typeof addForm.requestSubmit === 'function') addForm.requestSubmit();
+      else addForm.dispatchEvent(new Event('submit', { cancelable: true }));
+    }
+  });
+
+  /* 考試時間設定 */
+  $('timeForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const date = $('fDate').value, start = $('fStart').value, end = $('fEnd').value;
+    const err = $('fErr');
+    if (!date || !start || !end) { err.textContent = '請填好日期、開始與結束時間。'; err.hidden = false; return; }
+    if (at(date, end) <= at(date, start)) { err.textContent = '結束時間要晚於開始時間。'; err.hidden = false; return; }
+    err.hidden = true;
+    if (backend.readOnly) return;
+    state = { date, start, end, items: state.items };
+    persist();
+    renderSchedule();
+    showToast('考試時間改成 ' + date + ' ' + start + '–' + end, null);
+  });
+
+  /* ---------- 輪播：公告無限向上捲動 ---------- */
+  const viewport = $('viewport');
+  const track = $('track');
+  const car = { offset: 0, copyH: 0, last: 0, raf: 0, tops: [], step: 0, stepAt: 0 };
+  let speed = Number(lsGet(LS_SPEED)) || 38;
+  $('speed').value = String(speed);
+  if (!$('speed').value) { $('speed').value = '38'; speed = 38; }
+
+  function makeItem(it, i) {
+    const row = document.createElement('div');
+    row.className = 'c-item';
+    const b = document.createElement('span');
+    b.className = 'badge';
+    b.textContent = i + 1;
+    const p = document.createElement('p');
+    p.textContent = it.text;
+    row.append(b, p);
+    return row;
+  }
+  let buildGen = 0;
+  async function buildCarousel() {
+    const gen = ++buildGen;
+    clearMath(track);
+    track.textContent = '';
+    car.copyH = 0;
+    car.tops = [];
+    if (!state.items.length) {
+      const p = document.createElement('p');
+      p.className = 'c-empty';
+      p.textContent = '目前沒有公告';
+      track.append(p);
+      track.style.transform = '';
+      return;
+    }
+    const copy = document.createElement('div');
+    copy.className = 'copy';
+    track.append(copy);
+    state.items.forEach((it, i) => copy.append(makeItem(it, i)));
+    await typeset(copy);
+    if (gen !== buildGen) return;
+    const vh = viewport.clientHeight || 300;
+    // 公告太少時在同一段裡重複（複製已排好的公式），讓一段至少比可視區高，接縫才不會露出來
+    const one = Array.from(copy.children).map((el) => el.cloneNode(true));
+    let rounds = 1;
+    while (copy.offsetHeight < vh && rounds < 30) {
+      one.forEach((el) => copy.append(el.cloneNode(true)));
+      rounds += 1;
+    }
+    car.copyH = copy.offsetHeight;
+    car.tops = Array.from(copy.children).map((el) => el.offsetTop);
+    track.append(copy.cloneNode(true));
+    if (car.copyH > 0) car.offset = car.offset % car.copyH;
+    track.style.transform = 'translate3d(0,' + (-car.offset) + 'px,0)';
+  }
+  function tick(t) {
+    car.raf = requestAnimationFrame(tick);
+    if (!car.copyH) { car.last = t; return; }
+    if (reduced) {
+      // 減少動態：每 7 秒直接跳到下一則，不做平滑捲動
+      if (!car.stepAt) car.stepAt = t;
+      if (t - car.stepAt >= 7000) {
+        car.stepAt = t;
+        car.step = (car.step + 1) % car.tops.length;
+        car.offset = car.tops[car.step];
+        track.style.transform = 'translate3d(0,' + (-car.offset) + 'px,0)';
+      }
+      return;
+    }
+    const dt = car.last ? Math.min(0.1, (t - car.last) / 1000) : 0;
+    car.last = t;
+    car.offset = (car.offset + speed * dt) % car.copyH;
+    track.style.transform = 'translate3d(0,' + (-car.offset) + 'px,0)';
+  }
+  function startLoop() { if (!car.raf) { car.last = 0; car.raf = requestAnimationFrame(tick); } }
+  function stopLoop() { if (car.raf) cancelAnimationFrame(car.raf); car.raf = 0; }
+
+  let rebuildTimer = 0;
+  if ('ResizeObserver' in window) {
+    let lastW = 0, lastH = 0;
+    new ResizeObserver(() => {
+      if (app.dataset.mode !== 'carousel') return;
+      const w = viewport.clientWidth, h = viewport.clientHeight;
+      if (w === lastW && h === lastH) return;
+      lastW = w; lastH = h;
+      clearTimeout(rebuildTimer);
+      rebuildTimer = setTimeout(buildCarousel, 120);
+    }).observe(viewport);
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => { if (app.dataset.mode === 'carousel') buildCarousel(); });
+  }
+
+  $('speed').addEventListener('change', (e) => {
+    speed = Number(e.target.value) || 38;
+    lsSet(LS_SPEED, String(speed));
+  });
+
+  /* 螢幕常亮與全螢幕 */
+  let wake = null;
+  async function requestWake() {
+    try {
+      if ('wakeLock' in navigator && !wake) {
+        wake = await navigator.wakeLock.request('screen');
+        wake.addEventListener('release', () => { wake = null; });
+      }
+    } catch (e) { wake = null; }
+  }
+  function releaseWake() { if (wake) { wake.release().catch(() => {}); wake = null; } }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && app.dataset.mode === 'carousel') requestWake();
+  });
+  const fsBtn = $('fullscreen');
+  if (!document.documentElement.requestFullscreen) fsBtn.hidden = true;
+  fsBtn.addEventListener('click', () => {
+    const p = document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    if (p && p.catch) p.catch(() => { fsBtn.hidden = true; });
+  });
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '離開全螢幕' : '全螢幕';
+  });
+
+  /* 模式 */
+  function setMode(m) {
+    app.dataset.mode = m;
+    lsSet(LS_MODE, m);
+    if (m === 'carousel') {
+      buildCarousel();
+      startLoop();
+      requestWake();
+      $('stopCarousel').focus();
+    } else {
+      stopLoop();
+      releaseWake();
+      renderList();
+      $('startCarousel').focus();
+    }
+  }
+  $('startCarousel').addEventListener('click', () => setMode('carousel'));
+  $('stopCarousel').addEventListener('click', () => setMode('edit'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && app.dataset.mode === 'carousel' && !document.fullscreenElement) setMode('edit');
+  });
+
+  /* 啟動 */
+  renderSchedule();
+  const initialMode = location.hash === '#carousel' ? 'carousel' : (lsGet(LS_MODE) === 'carousel' ? 'carousel' : 'edit');
+  app.dataset.mode = initialMode;
+  renderBoard();
+  if (initialMode === 'carousel') { startLoop(); requestWake(); }
+  setInterval(renderTime, 200);
+  connectDb();
+})();
+</script>
+</body>
+</html>
