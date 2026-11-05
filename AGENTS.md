@@ -75,4 +75,4 @@
 - LaTeX 數字的千分位分隔符號使用 `{,}`，括號內不加空格，例如 `201{,}000`；一般列舉項目或參數之間的逗號仍依原規則在逗號後留空格。
 - 定義 LaTeX 巨集時使用 `\def`，不使用 `\newcommand` 或 `\renewcommand`，例如 `\def\FF{\mathbb F}`。
 - 新建 `.ipynb` 講義時，先加入兩個佔位的作業 section，依序為 `## Homework Due <Today+4>` 與 `## Homework Due <Today+7>`，之後再補上實際題目內容。
-- 新寫的教學內容放進當天（或下一次上課）的講義，不要回頭加進已經上過的講義，即使主題上更貼近舊講義；使用者要求把內容從舊講義移出時則照做。講義檔名是上課日期（例如 `1002.ipynb`），以今天的日期判斷是哪一份；提到舊講義中的圖時，寫成 from the previous lecture 這類說法。
+- 新寫的教學內容放進當天（或下一次上課）的講義，不要回頭加進已經上過的講義，即使主題上更貼近舊講義；使用者要求把內容從舊講義移出時則照做。講義檔名是上課日期（例如 `1002.ipynb`），以今天的日期判斷是哪一份；引用本課較早的講義（內容、圖、作業）時，寫成 `Recall that in 1002 we proved ...` 這類句子，引用作業時寫成 `Recall from the 0918 homework that ...`，用講義的日期（檔名去掉 `.ipynb`，不做連結）指明是哪一份；不要只寫 from the previous lecture 或 from an earlier lecture。

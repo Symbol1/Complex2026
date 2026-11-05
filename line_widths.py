@@ -41,8 +41,8 @@ DEFAULT_MAX_EM = 30
 # which the user cut to that rule, the median cell is 5.5 lines and most are 3 to 7.
 DEFAULT_MAX_LINES = 7
 MATH_SCALE = 1.21
-TALL = re.compile(r'\\(?:d?frac|int|iint|oint|sum|prod|lim|binom|Bigg?[lr]|bigg[lr]'
-                  r'|begin\{(?:[pbvBV]?matrix|cases)\})')
+TALL = re.compile(r'\\(?:d?frac|int|iint|oint|sum|prod|lim|binom|Bigg?[lr]|bigg[lr])')
+INNER = re.compile(r'\\begin\{([pbvBV]?matrix|cases)\}(.*?)\\end\{\1\}', re.S)
 DISPLAY = re.compile(r'\$\$(.+?)\$\$', re.S)
 INLINE = re.compile(r'(?<!\\)\$(.+?)(?<!\\)\$')
 DEF = re.compile(r'\\def\\[A-Za-z]+(?:#\d)*\{(?:[^{}]|\{[^{}]*\})*\}')
@@ -120,7 +120,12 @@ def cell_height(text):
     height = len(rendered_lines(text)) + 0.5 * len(re.findall(r'\n[ \t]*\n', text.strip()))
     for m in DISPLAY.finditer(text):
         body = re.sub(r'\\(?:begin|end)\{(?:aligned|gathered)\}', '', m.group(1))
-        height += 1 + sum(2 if TALL.search(row) else 1 for row in body.split('\\\\'))
+        # A matrix or cases block is as tall as its number of rows; it is not a row break.
+        body = INNER.sub(lambda e: f'\\INNER{{{e.group(2).count(chr(92) * 2) + 1}}}', body)
+        for row in body.split('\\\\'):
+            inner = [int(n) for n in re.findall(r'\\INNER\{(\d+)\}', row)]
+            height += max([2 if TALL.search(row) else 1] + inner)
+        height += 1
     return height
 
 
