@@ -17,9 +17,24 @@
 
 # Complex2026 課程進度與待補主題
 
-- 截至 2026-10-16，講義進度約到 residue theorem（*Complex Variables and Applications* 第 6.5 節、*Advanced Engineering Mathematics* 第 19.5 節）。稽核講義是否遺漏 PDF 內容時，只比較已經到達的課程進度；不把 residue theorem 之後的內容或 conformal mappings 等後半學期主題列為缺漏。進度往後推進時，再更新此截止點。
+- 截至 2026-11-20，講義進度約到用 residues 計算實積分（*Advanced Engineering Mathematics* 第 19.6 節，即 Zill 第 19 章結束；Kreyszig 第 16.4 節；*Complex Variables and Applications* 第 7 版（Brown 與 Churchill，`~/Desktop/Complex text/james.pdf`）第 78 節 Definite Integrals Involving Sines and Cosines）。稽核講義是否遺漏 PDF 內容時，只比較已經到達的課程進度；不把之後的內容（Brown–Churchill 第 79 節以後：argument principle、Rouché's theorem、inverse Laplace transforms、conformal mappings 等）列為缺漏；argument principle 與 Rouché's theorem 目前只出現在 1120 的作業。進度往後推進時，再更新此截止點。
+- 1113 停課。`1120.ipynb` 講三角函數積分（$z = e^{i\theta}$）、有理函數的 improper integrals 與 Cauchy principal value、sector 圍道、Fourier integrals 與 Jordan's lemma、indented contours（繞 simple pole 角度 $\alpha$ 的小圓弧在極限貢獻 $i\alpha$ 倍 residue）。`1120.ipynb` 的作業：Homework Due Tuesday 是 1016 預告、但 1106 沒有出的 argument principle 與 Rouché's theorem（附向學生道歉的說明）；Homework Due Friday 是 1106 作業中先預告的 (g)–(k)（stereographic projection 與 $SU(2)$，已從 1106 移出）；實積分的機械式計算題放在 `## Optional Exercises`，不是作業。
+- 出作業之前，先看前幾次講義的預告（`## Prepare for the Next HW` 或作業中的 preview），已預告的題目優先出；不要自行另外出一份作業取代預告。
+- 機械式的計算練習（套公式、算數值）一律放在 `## Optional Exercises`，不列入 Homework Due。
 - 已寫入 `1106.ipynb`（期中考後的第一次上課，尚未上課；期中考因 2026-10-19 那週颱風假延後一週到 1030，1030 沒有上課，所以講義從原本的 `1030.ipynb` 改名）：複變函數極限與極限運算律、用不同路徑判定極限不存在、一般複數 $n$ 次方根、$z^n$、$z^{1/n}$、$1/z$ 之下的 images 與 preimages、root branches、一般複數冪 $z^\alpha$ 與 $z^w$、inverse trigonometric functions、inverse hyperbolic functions、不額外假設 $f'$ 連續的 Cauchy–Goursat theorem 證明、Morera's theorem、harmonic functions、Laplace's equation、harmonic conjugates、正交 level curves、maximum-modulus principle（含 minimum-modulus 版本與 harmonic functions 的 maximum principle）。
-- 依照上述截止點，目前已確認的講義缺漏均已補入 `1106.ipynb`；後續稽核仍只比較已經到達的課程進度。
+- 1106 之前確認的講義缺漏已補入 `1106.ipynb`。1120 之後，*Advanced Engineering Mathematics*（Zill）第 19 章已經教完；2026-11-20 對照 Zill 第 17–19 章、Kreyszig 第 13–16 章與 Brown–Churchill 第 1–78 節，下列缺漏尚未補（新內容依規則放進下一份講義，不回頭改舊講義）：
+  - Non-isolated singularity：Zill 19.4 用 $\operatorname{Ln}z$ 的 branch point $0$ 當例子（另一個典型例子是 $1/\sin(\pi/z)$），講義沒有和 isolated singularity 的定義對照。
+  - 涉及 $\infty$ 的極限（Brown–Churchill 第 16 節）：$\lim_{z\to\infty}f(z)$ 與 $\lim_{z\to z_0}f(z) = \infty$，用 $1/z$ 換成 $0$ 附近的極限。1106 的極限只處理有限點。
+  - $\infty$ 的 singularity（Kreyszig 16.2 "Analytic or Singular at Infinity"）：用 $f(1/w)$ 定義 $\infty$ 處的 zero、pole、essential singularity；非常數 entire function 在 $\infty$ 是 pole 恰好當它是多項式，否則是 essential singularity。
+  - Cauchy–Riemann 的充分條件（Zill Theorem 17.5.2、Kreyszig 13.4 Theorem 2、Brown–Churchill 第 21 節）：一階偏導數連續且滿足 C–R，則 holomorphic。0918 只寫了「$\mathbb R^2$-differentiable 且滿足 C–R」。
+  - 極座標的 Cauchy–Riemann equations（Kreyszig 13.4、Brown–Churchill 第 22 節）：$u_r = v_\theta/r$、$v_r = -u_\theta/r$。
+  - 複變微分規則（Zill 17.4、Kreyszig 13.3、Brown–Churchill 第 19 節）：和、積、商、chain rule、$(z^n)' = nz^{n-1}$，講義一直在用但沒有正式寫出。
+  - Reflection principle（Brown–Churchill 第 27 節）：若 $f$ 在對稱於實軸的區域上 holomorphic，則 $\overline{f(\bar z)} = f(z)$ 恰好當 $f$ 在實軸的一段上取實數值。
+  - 對數的恆等式（Brown–Churchill 第 31 節）：$\log(z_1z_2) = \log z_1 + \log z_2$ 作為集合成立，$\operatorname{Log}(z_1z_2) = \operatorname{Log}z_1 + \operatorname{Log}z_2$ 一般不成立；$z^{1/n} = \exp\bigl((\log z)/n\bigr)$。
+  - Absolute and uniform convergence of power series 與 Weierstrass M-test（Brown–Churchill 第 57 節、Kreyszig 15.5，後者標為 optional）。1002 作業與 1106 的 Morera 已經用到 uniform convergence，但沒有正式定義或證明 power series 在較小的圓盤上 uniformly converge。
+  - Residue at $\infty$（Brown–Churchill 第 64 節 Using a Single Residue）：$\oint_C f(z)\,dz = 2\pi i\operatorname{Res}\bigl(z^{-2}f(1/z), 0\bigr)$，只算一個 residue 就能處理 $C$ 內所有的 singularities。
+  - Casorati–Weierstrass 只在 1016 作業中證明，講義正文沒有證明。
+  - Indentation around a branch point 與 integration along a branch cut（Brown–Churchill 第 76、77 節），例如 $\int_0^\infty \ln x/(x^2 + a^2)\,dx$ 與 $\int_0^\infty x^{-a}/(x + 1)\,dx = \pi/\sin(a\pi)$。1120 跳過了這兩節，但教了後面的第 78 節。
 
 # 考卷
 
