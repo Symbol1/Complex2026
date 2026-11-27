@@ -11,30 +11,29 @@
   zㄈ xㄌ cㄏ vㄒ bㄖ nㄙ mㄩ ,ㄝ .ㄡ /ㄥ
   ```
 
+- `.DS_Store`（macOS Finder 在每個資料夾產生的檔案）不進 git：`.gitignore` 要有 `.DS_Store` 一行（任何層級的資料夾都適用），`git add` 時也不要加進去。發現它已經被 commit 過時，只用 `git rm --cached` 不夠，還要從整個歷史中刪除，例如 `git filter-repo --invert-paths --path-glob '*.DS_Store'`。改寫歷史之後要 force push，push 之前先在 chat 中向使用者確認。
+
 # 環境
 
-- SageMath 裝在 `~/miniforge3/envs/sage`，不在 `PATH` 上：執行 Sage 用 `~/miniforge3/envs/sage/bin/sage`，執行講義用同一個環境的 `jupyter`（`sagemath` kernel 也在這裡）。驗證 Sage 程式碼時直接用它跑，不要因為 `which sage` 找不到就略過。
+- SageMath 的安裝位置依電腦而定，兩處都是建議的位置：Mac 上是 `/usr/local/bin/sage`（kernel `SageMath-10.10`，在 `/usr/local/share/jupyter/kernels/`）；Windows 上裝在 `~/miniforge3/envs/sage`，不在 `PATH` 上，執行 Sage 用 `~/miniforge3/envs/sage/bin/sage`，執行講義用同一個環境的 `jupyter`（`sagemath` kernel 也在這裡）。驗證 Sage 程式碼時直接用它跑，不要因為 `which sage` 找不到就略過。
 
 # Complex2026 課程進度與待補主題
 
-- 截至 2026-11-20，講義進度約到用 residues 計算實積分（*Advanced Engineering Mathematics* 第 19.6 節，即 Zill 第 19 章結束；Kreyszig 第 16.4 節；*Complex Variables and Applications* 第 7 版（Brown 與 Churchill，`~/Desktop/Complex text/james.pdf`）第 78 節 Definite Integrals Involving Sines and Cosines）。稽核講義是否遺漏 PDF 內容時，只比較已經到達的課程進度；不把之後的內容（Brown–Churchill 第 79 節以後：argument principle、Rouché's theorem、inverse Laplace transforms、conformal mappings 等）列為缺漏；argument principle 與 Rouché's theorem 目前只出現在 1120 的作業。進度往後推進時，再更新此截止點。
+- 截至 2026-11-27，講義進度到 Zill 第 20 章 conformal mappings（20.1–20.5，Schwarz–Christoffel 只講公式與兩個例子；1106 已講過 20.6 那類 complex potential 與 flow 的例子），residue 部分則約到用 residues 計算實積分（*Advanced Engineering Mathematics* 第 19.6 節，即 Zill 第 19 章結束；Kreyszig 第 16.4 節；*Complex Variables and Applications* 第 7 版（Brown 與 Churchill，`~/Desktop/Complex text/james.pdf`）第 78 節 Definite Integrals Involving Sines and Cosines）。稽核講義是否遺漏 PDF 內容時，只比較已經到達的課程進度；不把之後的內容（Brown–Churchill 第 79 節以後：argument principle、Rouché's theorem、inverse Laplace transforms、conformal mappings 等）列為缺漏；argument principle 與 Rouché's theorem 目前只出現在 1120 的作業。進度往後推進時，再更新此截止點。
 - 1113 停課。`1120.ipynb` 講三角函數積分（$z = e^{i\theta}$）、有理函數的 improper integrals 與 Cauchy principal value、sector 圍道、Fourier integrals 與 Jordan's lemma、indented contours（繞 simple pole 角度 $\alpha$ 的小圓弧在極限貢獻 $i\alpha$ 倍 residue）。`1120.ipynb` 的作業：Homework Due Tuesday 是 1016 預告、但 1106 沒有出的 argument principle 與 Rouché's theorem（附向學生道歉的說明）；Homework Due Friday 是 1106 作業中先預告的 (g)–(k)（stereographic projection 與 $SU(2)$，已從 1106 移出）；實積分的機械式計算題放在 `## Optional Exercises`，不是作業。
+- `1126.ipynb` 是補充講義，不在上課時講（原本寫成 1127，使用者覺得沒有主軸而改名），開頭註明這是 gaps，請同學回家自己讀、做 Optional Exercises：涉及 $\infty$ 的極限（Brown–Churchill 第 16 節）、$\infty$ 的 singularity 與 Laurent series（Kreyszig 16.2，含非常數 entire function 在 $\infty$ 是 pole 恰好當它是多項式）、non-isolated singularity（$1/\sin(\pi/z)$、$\tan z$ 在 $\infty$、$\operatorname{Log}z$ 的 branch point）、residue at $\infty$（Brown–Churchill 第 64 節，含所有 residues 和為零）、對數的恆等式（Brown–Churchill 第 31 節）、indentation around a branch point 與 keyhole contour（Brown–Churchill 第 76、77 節，$\int_0^\infty \ln x/(x^2 + a^2)\,dx = \pi\ln a/(2a)$、$\int_0^\infty x^{-a}/(x + 1)\,dx = \pi/\sin(a\pi)$）。它的作業移到 1127，只留 `## Optional Exercises`。
+- `1127.ipynb` 進入 Zill 第 20 章（盡量追進度）：conformality（chain rule、$f' \ne 0$ 保角、Jacobian 是 $|f'|^2$、critical point 把角度乘 $m$）、Möbius transformations（三點決定、Cayley transformation、disk automorphisms $\varphi_a$）、映射表（$z^{\pi/\alpha}$、$e^z$、$\operatorname{Log}z$、$\sin z$ 的 half-strip）與合成、harmonic functions 經 holomorphic map 仍 harmonic、用映射解 Dirichlet problems（分段常數邊界值、disk 與 half-strip 例子）、half-plane 與 disk 的 Poisson integral formulas（disk 版用 $\varphi_a$ 加 mean value property 推導）、Schwarz–Christoffel formula（為什麼邊是直的、$z^{\alpha/\pi}$ 與 $\arcsin$ 兩例、Riemann mapping theorem 只提及）。前幾次講義沒有未出的預告，所以作業是新出的，放在 1127：Homework Due Tuesday 是 Riemann sphere 上的 meromorphic functions 恰好是有理函數（subtract principal parts 加 Liouville）、degree $d$ 的有理函數在 $\hat{\mathbb C}$ 上每個值恰取 $d$ 次、一對一者恰好是 Möbius transformations；Homework Due Friday 是用 1126 的 keyhole 積 $f(z)L(z)$ 與 $f(z)L(z)^2$ 得 $\int_0^\infty f(x)\,dx$ 與 $\int_0^\infty f(x)\ln x\,dx$（例如 $\int_0^\infty \ln x/\bigl((x + 1)(x + 2)\bigr)\,dx = (\ln2)^2/2$）。
+- 期末考原本在 1225 上課時間（0911 的規則：期末考週前一週），因 1225 放假提早一週到 1218。所以 1127 之後只剩 1204、1211 兩次上課；1211 講義的作業不能排到 1218 考試當天之後。
 - 出作業之前，先看前幾次講義的預告（`## Prepare for the Next HW` 或作業中的 preview），已預告的題目優先出；不要自行另外出一份作業取代預告。
 - 機械式的計算練習（套公式、算數值）一律放在 `## Optional Exercises`，不列入 Homework Due。
 - 已寫入 `1106.ipynb`（期中考後的第一次上課，尚未上課；期中考因 2026-10-19 那週颱風假延後一週到 1030，1030 沒有上課，所以講義從原本的 `1030.ipynb` 改名）：複變函數極限與極限運算律、用不同路徑判定極限不存在、一般複數 $n$ 次方根、$z^n$、$z^{1/n}$、$1/z$ 之下的 images 與 preimages、root branches、一般複數冪 $z^\alpha$ 與 $z^w$、inverse trigonometric functions、inverse hyperbolic functions、不額外假設 $f'$ 連續的 Cauchy–Goursat theorem 證明、Morera's theorem、harmonic functions、Laplace's equation、harmonic conjugates、正交 level curves、maximum-modulus principle（含 minimum-modulus 版本與 harmonic functions 的 maximum principle）。
-- 1106 之前確認的講義缺漏已補入 `1106.ipynb`。1120 之後，*Advanced Engineering Mathematics*（Zill）第 19 章已經教完；2026-11-20 對照 Zill 第 17–19 章、Kreyszig 第 13–16 章與 Brown–Churchill 第 1–78 節，下列缺漏尚未補（新內容依規則放進下一份講義，不回頭改舊講義）：
-  - Non-isolated singularity：Zill 19.4 用 $\operatorname{Ln}z$ 的 branch point $0$ 當例子（另一個典型例子是 $1/\sin(\pi/z)$），講義沒有和 isolated singularity 的定義對照。
-  - 涉及 $\infty$ 的極限（Brown–Churchill 第 16 節）：$\lim_{z\to\infty}f(z)$ 與 $\lim_{z\to z_0}f(z) = \infty$，用 $1/z$ 換成 $0$ 附近的極限。1106 的極限只處理有限點。
-  - $\infty$ 的 singularity（Kreyszig 16.2 "Analytic or Singular at Infinity"）：用 $f(1/w)$ 定義 $\infty$ 處的 zero、pole、essential singularity；非常數 entire function 在 $\infty$ 是 pole 恰好當它是多項式，否則是 essential singularity。
+- 1106 之前確認的講義缺漏已補入 `1106.ipynb`。1120 之後，*Advanced Engineering Mathematics*（Zill）第 19 章已經教完；2026-11-20 對照 Zill 第 17–19 章、Kreyszig 第 13–16 章與 Brown–Churchill 第 1–78 節，下列缺漏尚未補（新內容依規則放進下一份講義，不回頭改舊講義；其他當時列出的缺漏已在 1127 補上）：
   - Cauchy–Riemann 的充分條件（Zill Theorem 17.5.2、Kreyszig 13.4 Theorem 2、Brown–Churchill 第 21 節）：一階偏導數連續且滿足 C–R，則 holomorphic。0918 只寫了「$\mathbb R^2$-differentiable 且滿足 C–R」。
   - 極座標的 Cauchy–Riemann equations（Kreyszig 13.4、Brown–Churchill 第 22 節）：$u_r = v_\theta/r$、$v_r = -u_\theta/r$。
   - 複變微分規則（Zill 17.4、Kreyszig 13.3、Brown–Churchill 第 19 節）：和、積、商、chain rule、$(z^n)' = nz^{n-1}$，講義一直在用但沒有正式寫出。
   - Reflection principle（Brown–Churchill 第 27 節）：若 $f$ 在對稱於實軸的區域上 holomorphic，則 $\overline{f(\bar z)} = f(z)$ 恰好當 $f$ 在實軸的一段上取實數值。
-  - 對數的恆等式（Brown–Churchill 第 31 節）：$\log(z_1z_2) = \log z_1 + \log z_2$ 作為集合成立，$\operatorname{Log}(z_1z_2) = \operatorname{Log}z_1 + \operatorname{Log}z_2$ 一般不成立；$z^{1/n} = \exp\bigl((\log z)/n\bigr)$。
   - Absolute and uniform convergence of power series 與 Weierstrass M-test（Brown–Churchill 第 57 節、Kreyszig 15.5，後者標為 optional）。1002 作業與 1106 的 Morera 已經用到 uniform convergence，但沒有正式定義或證明 power series 在較小的圓盤上 uniformly converge。
-  - Residue at $\infty$（Brown–Churchill 第 64 節 Using a Single Residue）：$\oint_C f(z)\,dz = 2\pi i\operatorname{Res}\bigl(z^{-2}f(1/z), 0\bigr)$，只算一個 residue 就能處理 $C$ 內所有的 singularities。
   - Casorati–Weierstrass 只在 1016 作業中證明，講義正文沒有證明。
-  - Indentation around a branch point 與 integration along a branch cut（Brown–Churchill 第 76、77 節），例如 $\int_0^\infty \ln x/(x^2 + a^2)\,dx$ 與 $\int_0^\infty x^{-a}/(x + 1)\,dx = \pi/\sin(a\pi)$。1120 跳過了這兩節，但教了後面的第 78 節。
 
 # 考卷
 
@@ -65,13 +64,15 @@
 - 講義中的英文散文請依照 AMS Style Guide（AMSSG）的規範書寫，不只限於引號規則。例如採用邏輯引號（logical quotation）：句尾標點（句號、逗號等）若不屬於被引用的文字本身，應放在右引號之外，如 `the term "bounded"` 而非 `"bounded."`；只有標點本身就是引文的一部分時才放在引號內。
 - 建立或修改 `.ipynb` 講義時，每個 section title（包含各級 Markdown 標題 `#` 至 `######`）必須獨立放在一個 Markdown cell；內文、公式、表格、圖片、其他標題應放在其他 cells。
 - 每個 cell 的內容不得有 leading empty line 或 trailing empty line；分段所需的空白行只保留在 cell 內容中間。編輯後跑 `python3 strip_blank_lines.py` 清掉（參數與 `fix_languageid.py` 相同，`--check` 只檢查）；VS Code 拆 cell 時常留下這種空行。
-- Markdown cell 大概五行（code cell 照舊大概十行），這是為了 jk 翻 cell 的時候不要一次捲動太多。依講述的步驟切 cell：展示公式和引出它的句子放在同一格，之後的說明常另起一格；主張、例子與結論各自一格。行數以呈現的高度計：`python3 line_widths.py --cells` 估計每個 Markdown cell 呈現後有幾行高（展示公式每列算一行，含分數、積分、求和等的列算兩行，每個展示公式再加一行上下留白），列出超過 7 行的；這是候選清單，一句話包住展示公式而拆不開的 cell 可以超過。
+- Markdown cell 大概五行，這是為了 jk 翻 cell 的時候不要一次捲動太多。依講述的步驟切 cell：展示公式和引出它的句子放在同一格，之後的說明常另起一格；主張、例子與結論各自一格。行數以呈現的高度計：`python3 line_widths.py --cells` 估計每個 Markdown cell 呈現後有幾行高（展示公式每列算一行，含分數、積分、求和等的列算兩行，每個展示公式再加一行上下留白），列出超過 7 行的；這是候選清單，一句話包住展示公式而拆不開的 cell 可以超過。Code cell 依功能與語意切分（例如一組資料、一個函式與它的用法、一張圖、一組檢查各一格），不要把一個函式或一個迴圈拆到兩格；在尊重功能的情況下同樣接近五行：函式太長時先抽出輔助函式或改寫得更精簡，模擬與畫圖分開成兩格。
 - 講義用到的照片與圖檔（板書照片、截圖等）放在以講義日期命名的資料夾（例如 `1012/`），檔名用簡短的英文名稱（小寫、以 `-` 連接），描述圖中畫了什麼，或補充、說明了什麼，例如 `0923/ball-leaves-hilltop-anytime.png`、`0930/two-paths-around-small-rectangle.png`。不要用 `image-1.png`、`IMG_1924.jpeg` 這類流水號，也不要加 `-board`、`-annotated` 這類只說明圖片形式的字尾。檔名會出現在講義原始碼、`git log`、`ls` 中，alt text 只有渲染後才看得到。改名時一併更新講義中的連結。照片保留拍攝時的完整解析度，不要另存縮小的複本。格式要能在 VS Code 與 GitHub 上直接顯示（JPEG、PNG、WebP）；iPhone 的 HEIC 先轉成同解析度的 JPEG 再放進資料夾。同一張照片在 repo 中只留一份。
 - Markdown 內文按句子分行，讓每個句子在呈現時也另起一行；同一段落內使用行尾兩個空格加換行，不只在原始碼中換行。長句可依語意在子句之間分行，參照使用者既有排版。空行只用於真正換段，公式前後仍遵循下述 TeX 段落規則。
 - Sage 程式碼的 cell 語言標記使用 `python`，以顯示語法配色；每個 code cell 的 `metadata.vscode.languageId` 與 notebook 的 `metadata.language_info.name` 都設為 `python`，不可設為 `sage`。執行核心仍使用 SageMath，保留 `metadata.kernelspec` 的 SageMath 設定。儲存後檢查所有 code cells，避免編輯器留下 `languageId: sage`。
   - **不要再把語法配色改成 sage。** 缺少 `metadata.vscode.languageId` 同樣算違規：VS Code 會退回 kernelspec 的 `"language": "sage"`，結果語法配色消失。因此每個 code cell（包含新增的 cell）都必須明確寫上 `"metadata": {"vscode": {"languageId": "python"}}`。
   - 不要修改 `metadata.kernelspec`（保留 `"language": "sage"`、`"name": "sagemath"`），也不要把 `language_info.name` 改成 `sage`。
   - 每次編輯 `.ipynb` 後都要跑 `python3 fix_languageid.py`（不加參數時處理資料夾內所有講義，也可以只指定檔名），它會把缺漏或為 `sage` 的 `languageId` 補成 `python`；只檢查、不修改時加 `--check`。VS Code 存檔時會拿掉 `languageId`，所以使用者在 VS Code 編輯過的講義，commit 前也要再跑一次。三門課用同一份 `fix_languageid.py`、`strip_blank_lines.py`、`display_widths.py`、`line_widths.py`，修改時三份一起改。
+  - Sage 的 preparser 會把 `^` 換成次方 `**`（`^=` 也是），所以 code cell 裡不要用 `^` 表示 XOR，改寫成 `(a + b) % 2`；也不要用 Sage 專用的 `^^`，因為 cell 標記成 `python`。Correct2026 的 1130 polar encoder 曾因此全部算錯，而用一般 Python 或 numpy 測試時看不出來。
+  - 新寫或修改的 code cells 要在 SageMath kernel 中跑一次，確認沒有 error，並打開畫出的圖確認圖例、座標軸標籤沒有遮住或被切掉，例如 `sage -python -m nbconvert --to notebook --execute --ExecutePreprocessor.kernel_name=SageMath-10.10 --allow-errors --output <暫存檔> <講義>`（kernel 名稱用 `jupyter kernelspec list` 查）。這只是檢查程式能不能用：使用者會自己 run all，所以輸出寫到暫存檔，不要覆蓋講義，也不必把執行結果存進講義。
 - LaTeX 原始碼要加上適當空格，讓公式容易閱讀：二元運算子與關係符號（如 `+`、`-`、`=`、`\in`、`\le`）兩側留空格，逗號後留空格。例如 `s_b(t) = A\cos(2\pi f_ct + \pi b),\qquad b \in \{0, 1\}`。上下標內例外，見下一條。
 - 上標與下標（`_{...}`、`^{...}`）內的原始碼不加空格：TeX 排版上下標時本來就省略運算子、關係符號、逗號周圍的間距，原始碼也比照呈現效果。例如寫 `a_{n+1}`、`(z - a)^{n+1}`、`\sum_{n=0}^\infty`、`\oint_{|z-a|=r}`、`\sum_{n\ge1}`、`\lim_{z\to a}`，不寫 `a_{n + 1}`、`\sum_{n = 0}`、`\oint_{|z - a| = r}`、`\sum_{n \ge 1}`。`\ge`、`\to` 等控制序列前面不加空格；後面只在接字母時保留一個空格，因為 TeX 需要它來結束控制序列名稱（如 `\to a`、`\ge N`）；接數字或其他符號時不加（如 `\ge1`、`\to0`、`\to\infty`）。`\text{...}` 內的文字照常空格。上下標內也不加 `\,` 等間距指令，例如寫 `q^{\max(u-d+1,0)}`。積分的微分符號前的 `\,` 不受這項規則限制，例如 `e^{-\int P\,dx}`。上下標裡並列兩組條件時，用 `\ ` 隔開比較好讀，例如 `_{1\le i\le n,\ 0\le j\le n-k-1}`。上下標以外的部分仍依上一條加空格。
 - 行內公式與前後文字的間距依上述混排規則處理；`$` 與公式內容之間不加空格。
