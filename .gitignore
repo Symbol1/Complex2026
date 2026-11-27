@@ -17,3 +17,6 @@ ignore/
 *.nav
 *.snm
 *.vrb
+
+# macOS Finder
+.DS_Store
